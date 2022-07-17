@@ -23,10 +23,10 @@ Generic
 Generating Keys
   -g, --generate string   the size of the key file to generate
   -c, --count int         the number of key files to generate (default 1)
+  -O, --offset int        the index offset (start) for the file index
 Encryption & Decryption
   -k, --key string        the file containing the key
   -i, --input string      the file containing the input, else stdin
-  -O, --offset int        the index offset (start) for counted files
 ```
 
 #### Generating Keys
@@ -78,13 +78,25 @@ Usage Tips:
   Use a program like [srm](https://man7.org/linux/man-pages/man1/shred.1.html) or [shred](https://linux.die.net/man/1/shred)
   (caution: [these may not work on journaled filesystems](https://stackoverflow.com/a/913360))
 - Generate keys of different sizes, and use the smallest one possible for a given message.*
-- Compress large files before sending them to use smaller keys.
+- Compress large files using a program like [gzip](https://linux.die.net/man/1/gzip), so you can use smaller keys.
 - Store your keys in an encrypted volume, such as a [VeraCrypt volume](https://en.wikipedia.org/wiki/VeraCrypt),
   until you need to use them. This also lets you use a non-journaled filesystem, so srm and shred will work.
 
-[*] This program does not support encrypting multiple messages using a single key file,
-  unless you modify the file yourself to remove only the used key bytes.
+[*] This program does not support encrypting multiple messages over time using a single key file,
+unless you modify the file yourself to remove only the key bytes used for a previous operation.
 
+That said, here's a way you can do that. **Only run these commands if you know what you are doing.
+See the [dd man page](https://linux.die.net/man/1/dd) for more information.**
+
+This command will remove the first 64 bytes of `key.txt`, placing the result in `stripped_key.txt`.
+
+`dd if=key.txt of=stripped_key.txt ibs=64 skip=1`
+
+If you need to strip a larger value (perhaps more than 50 MB), use a smaller value for `ibs`, and
+a value for `skip` such that `ibs * skip = number of bytes to remove`. The following command will
+do the same thing, removing the first 500 million bytes (500 MB) of the file, in 1 MB chunks.
+
+`dd if=key.txt of=stripped_key.txt ibs=1000 skip=500`
 
 ## License
 

@@ -33,7 +33,7 @@ func init() {
 	// Key File Generation
 	pflag.StringVarP(&generate, "generate", "g", "", "the size of the key file to generate")
 	pflag.IntVarP(&genCount, "count", "c", 1, "the number of key files to generate")
-	pflag.IntVarP(&genOffset, "offset", "O", 0, "the index offset (start) for counted files")
+	pflag.IntVarP(&genOffset, "offset", "O", 0, "the index offset (start) for the file index")
 	// Encoding and Decoding
 	pflag.StringVarP(&keyPath, "key", "k", "", "the file containing the key")
 	pflag.StringVarP(&inputPath, "input", "i", "", "the file containing the input, else stdin")
